@@ -25,6 +25,10 @@ Your SaaS application will be deployed as:
 3. Sign up with your **GitHub account** (same as your repo)
 4. Verify your account
 
+## 🚀 **IMPORTANT: Railway Deployment Strategy**
+
+Due to Railway's Nixpacks detection issues with monorepos, we'll deploy each service separately by specifying the **Root Directory** for each service.
+
 ### Step 2: Deploy Backend Service
 
 1. **Create New Project**:
@@ -34,21 +38,19 @@ Your SaaS application will be deployed as:
 
 2. **Configure Backend Service**:
    - **Service Name**: `saas-backend`
-   - **Root Directory**: `backend` (IMPORTANT!)
-   - **Start Command**: `npm start`
-   - **Build Command**: `npm install`
+   - Go to **Settings** → **Service** → **Root Directory**: `backend`
+   - **Build Command**: Leave empty (auto-detected)
+   - **Start Command**: Leave empty (auto-detected: `npm start`)
 
-3. **Add Environment Variables**:
-   Click on your backend service → **Variables** tab:
+3. **Environment Variables** (Variables tab):
    ```env
    NODE_ENV=production
    JWT_SECRET=your-super-secret-railway-jwt-key-123456789
-   PORT=${{PORT}}
    DATABASE_URL=${{Postgres.DATABASE_URL}}
    FRONTEND_URL=https://your-frontend-service.railway.app
    ```
 
-**Important**: Make sure to set **Root Directory** to `backend` so Railway only builds the backend service!
+**Critical**: The **Root Directory** setting tells Railway to only look at the `backend/` folder, avoiding monorepo confusion.
 
 ### Step 3: Add PostgreSQL Database
 
@@ -245,22 +247,53 @@ railway status
 railway logs
 ```
 
-### Common Issues & Solutions:
+## 🛠 Troubleshooting Railway Deployment Issues
 
-1. **Build Fails**:
-   - Check `package.json` scripts
-   - Verify dependencies in `package-lock.json`
-   - Check build logs in Railway dashboard
+### Issue 1: "Nixpacks build failed" or "Failed to parse Nixpacks config file"
 
-2. **Database Connection Issues**:
-   - Ensure `DATABASE_URL` is set correctly
-   - Check PostgreSQL service is running
-   - Verify schema is initialized
+**Solution**: 
+1. **Remove any nixpacks.toml files** from your repo
+2. **Set Root Directory** correctly in Railway service settings:
+   - Backend service: Root Directory = `backend`
+   - Frontend service: Root Directory = `frontend`
+3. Let Railway auto-detect the build process
 
-3. **CORS Errors**:
-   - Update `FRONTEND_URL` in backend
-   - Check CORS middleware configuration
-   - Verify API endpoints
+### Issue 2: "No package.json found" or build detection issues
+
+**Solution**:
+1. Verify **Root Directory** is set correctly
+2. Check that `package.json` exists in the specified directory
+3. Make sure your `package.json` has correct scripts:
+   - Backend: `"start": "node src/app.js"`
+   - Frontend: `"build": "vite build"`, `"preview": "vite preview"`
+
+### Issue 3: Database connection errors
+
+**Solution**:
+1. Add PostgreSQL service to your Railway project first
+2. Use `${{Postgres.DATABASE_URL}}` in your environment variables
+3. Make sure your backend uses `process.env.DATABASE_URL`
+
+### Issue 4: CORS errors between frontend and backend
+
+**Solution**:
+1. Update backend CORS settings with frontend URL
+2. Set `FRONTEND_URL` environment variable in backend service
+3. Set `VITE_API_URL` environment variable in frontend service
+
+## 🔄 Alternative: Fork Repository Approach
+
+If you continue having issues with the monorepo structure:
+
+1. **Create separate repositories**:
+   - Fork/copy `backend/` to new repo: `saas-backend`
+   - Fork/copy `frontend/` to new repo: `saas-frontend`
+
+2. **Deploy each repository separately**:
+   - Deploy `saas-backend` as a service
+   - Deploy `saas-frontend` as a service
+
+This eliminates monorepo complexity entirely.
 
 ## ✅ Deployment Checklist
 

@@ -1,18 +1,21 @@
 {
-  "name": "saas-application-monorepo",
+  "name": "saas-application",
   "version": "1.0.0",
   "description": "SaaS Application with React Frontend and Node.js Backend",
-  "main": "backend/src/app.js",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
-    "start": "cd backend && npm start",
-    "dev": "cd backend && npm run dev",
-    "build": "cd frontend && npm run build",
-    "install-all": "cd backend && npm install && cd ../frontend && npm install",
-    "heroku-postbuild": "cd backend && npm install && cd ../frontend && npm install && npm run build"
+    "start": "npm run start --workspace=backend",
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+    "build": "npm run build --workspace=frontend",
+    "install-all": "npm install --workspaces"
   },
   "engines": {
-    "node": "18.x",
-    "npm": "9.x"
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
   "keywords": ["saas", "react", "nodejs", "postgresql"],
   "author": "Mohamed",
@@ -20,5 +23,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Mohamedriyas2411/saas-app.git"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
   }
 }
