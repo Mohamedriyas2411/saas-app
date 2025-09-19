@@ -33,9 +33,8 @@ Your SaaS application will be deployed as:
    - Choose: `Mohamedriyas2411/saas-app`
 
 2. **Configure Backend Service**:
-   - Railway will auto-detect your Node.js backend
-   - It will create a service from your root directory
-   - **Root Directory**: Set to `backend`
+   - **Service Name**: `saas-backend`
+   - **Root Directory**: `backend` (IMPORTANT!)
    - **Start Command**: `npm start`
    - **Build Command**: `npm install`
 
@@ -48,6 +47,8 @@ Your SaaS application will be deployed as:
    DATABASE_URL=${{Postgres.DATABASE_URL}}
    FRONTEND_URL=https://your-frontend-service.railway.app
    ```
+
+**Important**: Make sure to set **Root Directory** to `backend` so Railway only builds the backend service!
 
 ### Step 3: Add PostgreSQL Database
 
@@ -105,15 +106,17 @@ Your SaaS application will be deployed as:
    - **Service Name**: `saas-frontend`
 
 2. **Configure Frontend Build**:
-   - **Root Directory**: `frontend`
+   - **Root Directory**: `frontend` (IMPORTANT!)
    - **Build Command**: `npm run build`
-   - **Start Command**: `npm run preview`
-   - **Public Path**: Leave empty
+   - **Start Command**: `npm run preview -- --host 0.0.0.0 --port $PORT`
+   - **Install Command**: `npm install`
 
 3. **Frontend Environment Variables**:
    ```env
    VITE_API_URL=https://your-backend-service.railway.app/api
    ```
+
+**Important**: Set **Root Directory** to `frontend` so Railway only builds the React app!
 
 ### Step 6: Update CORS Settings
 

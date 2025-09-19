@@ -1,11 +1,11 @@
 [build]
 builder = "NIXPACKS"
 
+# Backend service configuration
 [deploy]
 healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
-startCommand = "npm start"
 
 [environments.production.variables]
 NODE_ENV = "production"
