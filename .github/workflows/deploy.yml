@@ -1,0 +1,43 @@
+name: Deploy SaaS Application
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install backend dependencies
+      run: cd backend && npm install
+      
+    - name: Install frontend dependencies
+      run: cd frontend && npm install
+      
+    - name: Run backend tests
+      run: cd backend && npm test
+      
+    - name: Build frontend
+      run: cd frontend && npm run build
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    # Add your deployment steps here based on chosen platform
+    - name: Deploy to DigitalOcean App Platform
+      run: echo "Deploy to your chosen platform"
