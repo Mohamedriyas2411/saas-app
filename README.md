@@ -364,6 +364,27 @@ taskkill /PID <PID> /F
 ---
 
 **Happy coding! 🎉**
-#   s a a s - a p p l i c a t i o n  
- #   s a a s - a p p l i c a t i o n  
+#   s a a s - a p p l i c a t i o n 
  
+ #   s a a s - a p p l i c a t i o n 
+ 
+ 
+=======
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check [issues page](../../issues).
+
+## 👨‍💻 Author
+
+**Your Name**
+- GitHub: [@yourusername](https://github.com/yourusername)
+- Email: your.email@example.com
+
+## ⭐ Show your support
+
+Give a ⭐️ if this project helped you!
+>>>>>>> 0c17a3ef0188c44a4e57b08b2fa1d86802ad894f
