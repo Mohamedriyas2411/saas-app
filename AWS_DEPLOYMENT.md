@@ -9,7 +9,7 @@ Your SaaS application can be deployed to AWS using free tier services. Here are 
 ### Architecture:
 - **Frontend**: AWS Amplify (Static hosting - Free)
 - **Backend**: EC2 t2.micro (Free tier - 750 hours/month)
-- **Database**: RDS PostgreSQL t3.micro (Free tier - 750 hours/month)
+- **Database**: MongoDB Atlas (Free tier - 512MB)
 - **Storage**: S3 (5GB free)
 
 ### Step 1: Prepare Your Application
@@ -26,7 +26,7 @@ VITE_API_URL=https://your-ec2-instance.compute.amazonaws.com/api
 ```bash
 # In backend/.env.aws
 JWT_SECRET=your-super-secret-jwt-key-for-aws
-DATABASE_URL=postgresql://username:password@your-rds-endpoint:5432/saasdb
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/saas_app
 NODE_ENV=production
 PORT=5000
 FRONTEND_URL=https://your-amplify-app.amplifyapp.com
@@ -113,31 +113,30 @@ cp .env.aws .env
 nano .env  # Edit with your RDS connection details
 ```
 
-### Step 4: Setup RDS PostgreSQL Database
+### Step 4: Setup MongoDB Atlas Database
 
-1. **Create RDS Instance**:
-   - Go to RDS Console
-   - Click "Create database"
-   - Choose PostgreSQL
-   - Templates: Free tier
-   - DB instance: db.t3.micro
-   - Storage: 20 GB (Free tier limit)
-   - Set master username/password
-   - Public access: Yes (for initial setup)
-   - Security group: Allow PostgreSQL (5432) from your EC2
+1. **Create MongoDB Atlas Account**:
+   - Go to [MongoDB Atlas](https://www.mongodb.com/atlas)
+   - Sign up for free account
+   - Create a new cluster (Free tier: M0 Sandbox)
 
-2. **Initialize Database**:
-```bash
-# On EC2 instance
-cd /home/ec2-user/your-saas-app/backend
+2. **Configure Database**:
+   - Choose AWS as cloud provider
+   - Select same region as your EC2 instance
+   - Create database user with username/password
+   - Whitelist IP addresses (0.0.0.0/0 for now, restrict later)
 
-# Install PostgreSQL client
-sudo dnf install -y postgresql15
+3. **Get Connection String**:
+   - Click "Connect" → "Connect your application"
+   - Copy the connection string
+   - Replace `<password>` with your database user password
+   - Update your backend `.env` file with MONGODB_URI
 
-# Connect to RDS and create tables
-psql -h your-rds-endpoint.amazonaws.com -U your-username -d postgres
-# Run your schema.sql commands
-```
+4. **Initialize Database**:
+   ```bash
+   # Your MongoDB models will auto-create collections
+   # No manual schema creation needed!
+   ```
 
 ### Step 5: Start Backend Service
 
